@@ -1,0 +1,20 @@
+{
+  "name": "sarcastic_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.15",
+    "openai": "^2.0.5",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.16.7"
+  }
+}
