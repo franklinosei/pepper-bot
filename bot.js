@@ -1,5 +1,5 @@
 const qrcode = require('qrcode-terminal');
-const { sendMessageFriend, sendMessageMarv } = require('./controller');
+const { sendMessageFriend, sendMessageMarv, createImage } = require('./controller');
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 var fs = require('fs');
 
@@ -20,7 +20,7 @@ client.on('ready', () => {
 });
 
 client.on('message', async msg => {
-    
+
     if (msg.type == 'sticker') {
         // var tmp = await msg.getChat();
         // var contact = await tmp.getContact();
@@ -39,21 +39,51 @@ client.on('message', async msg => {
         //     msg.reply(sticker, undefined, { sendMediaAsSticker: true });
 
         // }
-    } else if (msg.body.length > 0) {
+    } else if (msg.body.length >= 2) {
 
-          var tmp = await msg.getChat();
-          await tmp.sendStateTyping(); // send typing indicator
 
-        // if (msg.from.includes("206546543") || msg.from.includes("542480050")) {
-        //     const result = await sendMessageFriend(msg.body).catch(err => console.log(err));
-        //     msg.reply(result.trim());
+        if (msg.body.startsWith("+")) {
+            var tmp = await msg.getChat();
+            await tmp.sendStateTyping(); // send typing indicator
 
-        // } else {
-
-            const result = await sendMessageMarv(msg.body).catch(err => console.log(err));
+            var text = msg.body.substring(1)
+            const result = await sendMessageFriend(text).catch(err => console.log(err));
             msg.reply(result.trim());
-        // }
+
+        }
+      
+
+
+    
+    else if (msg.body.startsWith("#")) { 
+        var tmp = await msg.getChat();
+        await tmp.sendStateTyping(); // send typing indicator
+
+        var text = msg.body.substring(1)
+        const result = await createImage(text).catch(err => console.log(err));
+
+        var image = await MessageMedia.fromUrl(result)
+
+
+        msg.reply(image);
     }
+
+      else {
+
+            // var tmp = await msg.getChat();
+            // if (msg.hasQuotedMsg) {
+            //     await tmp.sendStateTyping(); // send typing indicator
+            //     const result = await sendMessageMarv(msg.body).catch(err => console.log(err));
+            //     msg.reply(result.trim());
+            // }
+
+            // var tmp = await msg.getChat();
+            // await tmp.sendStateTyping(); // send typing indicator
+
+            // const result = await sendMessageMarv(text).catch(err => console.log(err));
+            // msg.reply(result.trim());
+        }
+}
 });
 
 client.initialize();
